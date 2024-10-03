@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { MyContext, ThemeContext } from "../App";
 
 export default function Header({}) {
@@ -7,15 +7,22 @@ export default function Header({}) {
     const themeContext = useContext(ThemeContext);
 
     const handleCheckChange = () => {
-      if(themeContext.theme === 'dark') {
-        themeContext.setTheme('light');
-      } else {
-        themeContext.setTheme('dark');
-      }
+        const initialTheme = localStorage.getItem("theme")
+        const newTheme = themeContext.theme === 'light' ? 'dark' : 'light'
+        themeContext.setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
     }
 
+    useEffect (() => {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            themeContext.setTheme(savedTheme);
+        }
+    },[])
+
     const handleButtonClick = () => {
-      console.log("CLICK!");
+      localStorage.clear(); // Handy!
+      themeContext.setTheme('light')
     }
 
     return (
